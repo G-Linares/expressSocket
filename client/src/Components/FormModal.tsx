@@ -17,8 +17,7 @@ export default function FormModal({ setIsModalOpen }: Props): ReactElement {
     socket.emit("send_new_item", {
       title: title,
       price: price,
-      thumbnail: thumbnail,
-      id: "123123"
+      thumbnail: thumbnail
     });
   };
 

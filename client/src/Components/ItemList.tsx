@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
+import { connect } from "socket.io-client";
 
+const socket = connect("http://localhost:3001");
 interface ItemListProps {
   id: string;
   title: string;
@@ -14,10 +16,10 @@ export default function ItemList({
   price
 }: ItemListProps): ReactElement {
   const handleDelete = (id: string) => {
-    console.log("deleted item");
+    socket.emit("delete_item", id);
   };
   return (
-    <>
+    <tr className="whitespace-nowrap">
       <td className="px-6 py-4 text-sm text-gray-500">{id}</td>
       <td className="px-6 py-4">
         <div className="text-sm text-gray-900">{title}</div>
@@ -37,6 +39,6 @@ export default function ItemList({
           Delete
         </button>
       </td>
-    </>
+    </tr>
   );
 }

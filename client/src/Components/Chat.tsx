@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "socket.io-client";
 
+// siempre va a ser hardcoded el 3001
 const socket = connect("http://localhost:3001");
 
 export default function Chat() {
@@ -11,27 +12,12 @@ export default function Chat() {
   >([]);
 
   useEffect(() => {
-    return () => {
-      socket.on("recover_conversation", (data) => {
-        setConversation(data);
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      socket.on("receive_message", (data) => {
-        const incomingMessage = {
-          message: data.message,
-          date: data.date,
-          sender: data.sender
-        };
-        setConversation((conversation: any) => [
-          ...conversation,
-          incomingMessage
-        ]);
-      });
-    };
+    socket.on("recover_conversation", (data) => {
+      setConversation(data);
+    });
+    socket.on("receive_message", (data) => {
+      setConversation((conversation: any) => [...conversation, data]);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 

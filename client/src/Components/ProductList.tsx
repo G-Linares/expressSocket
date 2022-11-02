@@ -8,23 +8,16 @@ const socket = connect("http://localhost:3001");
 export default function ProductList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState<
-    { price: string; thumbnail: string; title: string; id: string }[]
+    { price: string; thumbnail: string; title: string; _id: string }[]
   >([]);
 
   useEffect(() => {
-    return () => {
-      socket.on("recover_items", (data) => {
-        setItems(data);
-      });
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      socket.on("receive_item", (data) => {
-        setItems((listing: any) => [...listing, data]);
-      });
-    };
+    socket.on("recover_items", (data) => {
+      setItems(data);
+    });
+    socket.on("receive_item", (data) => {
+      setItems((listing: any) => [...listing, data]);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
@@ -48,21 +41,23 @@ export default function ProductList() {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-300">
                   {items.length < 1 ? (
-                    <>no hay items</>
+                    <tr>
+                      <td> no hay items</td>
+                    </tr>
                   ) : (
-                    <tr className="whitespace-nowrap">
+                    <>
                       {items.map((item, idx) => {
                         return (
                           <ItemList
-                            key={idx + item.id}
+                            key={item._id}
                             price={item.price}
                             thumbnail={item.thumbnail}
                             title={item.title}
-                            id={item.id}
+                            id={item._id}
                           />
                         );
                       })}
-                    </tr>
+                    </>
                   )}
                 </tbody>
               </table>
