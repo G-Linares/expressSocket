@@ -31,7 +31,7 @@ export default function FormModal({ setIsModalOpen }: Props): ReactElement {
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
           <div className="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-600">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Terms of Service
+              Agrega un Item
             </h3>
             <button
               type="button"
