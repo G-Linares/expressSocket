@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "socket.io-client";
+import React from "react";
+import useGetItems from "../Utils/useGetItems";
 import ItemList from "./ItemList";
-import FormModal from "./FormModal";
+import { TApiResponse } from "../Utils/useGetItems";
 
-const socket = connect("http://localhost:3001");
+export interface ItemTypes {
+  id: string;
+  price: string;
+  thumbnail: string;
+  title: string;
+}
 
 export default function ProductList() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [items, setItems] = useState<
-    { price: string; thumbnail: string; title: string; _id: string }[]
-  >([]);
-
-  useEffect(() => {
-    socket.on("recover_items", (data) => {
-      setItems(data);
-    });
-    socket.on("receive_item", (data) => {
-      setItems((listing: any) => [...listing, data]);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+  const { allItems, isLoading }: TApiResponse = useGetItems(
+    "http://localhost:8080/api/productos-test"
+  );
 
   return (
     <div className="flex flex-col">
@@ -36,24 +30,23 @@ export default function ProductList() {
                       Thumbanil
                     </th>
                     <th className="px-6 py-2 text-xs text-gray-500">Precio</th>
-                    <th className="px-6 py-2 text-xs text-gray-500">Borrar</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-300">
-                  {items.length < 1 ? (
+                  {isLoading ? (
                     <tr>
-                      <td> no hay items</td>
+                      <td> Loading</td>
                     </tr>
                   ) : (
                     <>
-                      {items.map((item, idx) => {
+                      {allItems.map((item: ItemTypes) => {
                         return (
                           <ItemList
-                            key={item._id}
+                            key={item.id}
                             price={item.price}
                             thumbnail={item.thumbnail}
                             title={item.title}
-                            id={item._id}
+                            id={item.id}
                           />
                         );
                       })}
@@ -65,14 +58,6 @@ export default function ProductList() {
           </div>
         </div>
       </div>
-      <button
-        className="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button"
-        onClick={() => setIsModalOpen(true)}
-      >
-        Agregar item
-      </button>
-      {isModalOpen && <FormModal setIsModalOpen={setIsModalOpen} />}
     </div>
   );
 }
