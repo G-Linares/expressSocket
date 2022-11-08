@@ -14,6 +14,7 @@ export const socketLogic = async (socket) => {
 	}
 
 	socket.on('send_message', async (data) => {
+		console.log(data);
 		await contenedorChat.saveOneMessage(data);
 		const updatedConversation = await contenedorChat.getAllMessages();
 		socket.emit(

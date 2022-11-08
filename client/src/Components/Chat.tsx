@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "socket.io-client";
+import { messageType } from "../Utils/chatTypes";
 
 // siempre va a ser hardcoded el 3001
 const socket = connect("http://localhost:3001");
 
 export default function Chat() {
-  const [message, setMessage] = useState("");
-  const [sender, setSender] = useState("");
-  const [conversation, setConversation] = useState<
-    { message: string; sender: string; date: string }[]
-  >([]);
+  // author props ------
+  const [email, setEmail] = useState<string>("test@gmail.com");
+  const [nombre, setNombre] = useState<string>("");
+  const [apellido, setApellido] = useState<string>("");
+  const [edad, setEdad] = useState<string>("");
+  const [alias, setAlias] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
+  // message props------
+  const [text, setText] = useState<string>("");
+
+  const [conversation, setConversation] = useState<messageType[]>([]);
 
   useEffect(() => {
     socket.on("recover_conversation", (data) => {
       setConversation(data);
     });
     socket.on("receive_message", (data) => {
-      setConversation((conversation: any) => [...conversation, data]);
+      setConversation((conversation) => [...conversation, data]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
@@ -24,10 +31,17 @@ export default function Chat() {
   const handleSendMessage = (e: React.SyntheticEvent) => {
     e.preventDefault();
     socket.emit("send_message", {
-      message: message,
-      date: new Date(),
-      sender: sender
+      text: text,
+      author: {
+        email: email,
+        nombre: nombre,
+        apellido: apellido,
+        edad: edad,
+        alias: alias,
+        avatar: avatar
+      }
     });
+    setText("");
   };
 
   return (
@@ -36,8 +50,8 @@ export default function Chat() {
         {conversation.length < 1 ? (
           <div> No hay mensajes</div>
         ) : (
-          conversation.map((item, idx: number) => {
-            if (item.sender === sender) {
+          conversation.map((item: messageType, idx: number) => {
+            if (item.author.email === email) {
               return (
                 <div
                   className="flex w-full mt-4 space-x-3 max-w-xs ml-auto justify-end"
@@ -45,14 +59,14 @@ export default function Chat() {
                 >
                   <div>
                     <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                      <p className="text-sm">{item.message}</p>
+                      <p className="text-sm">{item.text}</p>
                     </div>
                     <span className="text-sm text-red-500 leading-none">
-                      {item.date}
+                      {item.timeStamp}
                     </span>
                     <br />
                     <span className="text-sm text-blue-500 leading-none">
-                      {item.sender}
+                      {item.author.email}
                     </span>
                   </div>
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
@@ -66,14 +80,14 @@ export default function Chat() {
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center"></div>
                   <div>
                     <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                      <p className="text-sm">{item.message}</p>
+                      <p className="text-sm">{item.text}</p>
                     </div>
                     <span className="text-sm text-red-500 leading-none">
-                      {item.date}
+                      {item.timeStamp}
                     </span>
                     <br />
                     <span className="text-sm text-blue-500 leading-none">
-                      {item.sender}
+                      {item.author.email}
                     </span>
                   </div>
                 </div>
@@ -88,17 +102,9 @@ export default function Chat() {
           <input
             className="flex items-center h-10 w-full rounded px-3 text-sm"
             type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             placeholder="Escribe tu mensaje…"
-          />
-          <input
-            className="flex items-center h-10 w-1/2 rounded px-3 text-sm"
-            type="email"
-            value={sender}
-            required
-            onChange={(e) => setSender(e.target.value)}
-            placeholder="Email"
           />
           <button type="submit" className="pl-2">
             Enviar
