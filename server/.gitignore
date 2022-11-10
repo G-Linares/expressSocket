@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 /data
+/data/logs
 .pnp.js
 
 
