@@ -4,8 +4,11 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import http from 'http';
 import { Server } from 'socket.io';
+import session from 'express-session';
 import { socketLogic } from './Utils/socketLogic.js';
+
 import mainRouter from './Routes/mainRoute.js';
+import { sessionOptions } from './Utils/mongoStoreSession.js';
 
 // PORTS
 dotenv.config();
@@ -19,7 +22,10 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// SOCKET IO STANDARD CONFIG
+// MONGO SESSION CONFIG --------
+app.use(session(sessionOptions));
+
+// SOCKET IO STANDARD CONFIG --------
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
@@ -29,7 +35,7 @@ const io = new Server(server, {
 });
 io.on('connection', socketLogic);
 
-// APP ROUTING
+// APP ROUTING -------------------------------
 app.use('/api', mainRouter);
 
 // MONGO SETUP STANDARD

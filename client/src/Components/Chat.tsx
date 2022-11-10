@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "socket.io-client";
 import { messageType } from "../Utils/chatTypes";
+import { ClipLoader } from "react-spinners";
 
 // siempre va a ser hardcoded el 3001
 const socket = connect("http://localhost:3001");
@@ -10,7 +11,7 @@ export default function Chat() {
   const [email, setEmail] = useState<string>("test@gmail.com");
   const [nombre, setNombre] = useState<string>("");
   const [apellido, setApellido] = useState<string>("");
-  const [edad, setEdad] = useState<string>("");
+  const [edad, setEdad] = useState<number>(0);
   const [alias, setAlias] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
   // message props------
@@ -30,6 +31,12 @@ export default function Chat() {
 
   const handleSendMessage = (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setEmail("test@gmail.com");
+    setNombre("test");
+    setApellido("testing");
+    setEdad(12);
+    setAlias("Testeringo");
+    setAvatar("avatar");
     socket.emit("send_message", {
       text: text,
       author: {
@@ -48,7 +55,16 @@ export default function Chat() {
     <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden min-h-[500px]">
       <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
         {conversation.length < 1 ? (
-          <div> No hay mensajes</div>
+          <div className="flex items-center justify-center h-full w-full">
+            {" "}
+            <ClipLoader
+              color="#4e59e9"
+              loading={true}
+              size={150}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          </div>
         ) : (
           conversation.map((item: messageType, idx: number) => {
             if (item.author.email === email) {

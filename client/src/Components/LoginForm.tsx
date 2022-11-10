@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalState } from "../Utils/globalContext";
@@ -5,6 +6,7 @@ import { useGlobalState } from "../Utils/globalContext";
 export default function LoginForm(): ReactElement {
   const { setUser } = useGlobalState();
   const navigate = useNavigate();
+
   interface FormDataType {
     userName: string;
     password: string;
@@ -24,13 +26,26 @@ export default function LoginForm(): ReactElement {
     setFunction(event.target.value);
   };
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     responseBody.userName = userName;
     responseBody.password = password;
     // ya tenemos el request desde front
     setUser(responseBody);
-    navigate("/home");
+    try {
+      const { data: response } = await axios.post(
+        `${process.env.REACT_APP_LOGIN_URL}`,
+        responseBody
+      );
+      if (response.message === "success") {
+        navigate("/home");
+        window.location.reload();
+      } else {
+        alert(" Contraseña o usuario incorrecto");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

@@ -2,6 +2,7 @@ import React from "react";
 import useGetItems from "../Utils/useGetItems";
 import ItemList from "./ItemList";
 import { TApiResponse } from "../Utils/useGetItems";
+import { ClipLoader } from "react-spinners";
 
 export interface ItemTypes {
   id: string;
@@ -35,7 +36,19 @@ export default function ProductList() {
                 <tbody className="bg-white divide-y divide-gray-300">
                   {isLoading ? (
                     <tr>
-                      <td> Loading</td>
+                      <td>
+                        {" "}
+                        <div className="flex items-center justify-center h-full w-full">
+                          {" "}
+                          <ClipLoader
+                            color="#4e59e9"
+                            loading={true}
+                            size={150}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                          />
+                        </div>
+                      </td>
                     </tr>
                   ) : (
                     <>

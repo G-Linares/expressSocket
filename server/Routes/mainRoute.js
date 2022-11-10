@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { ContenedorProductos } from '../Class/ContenedorProductos.js';
 
 // inicializo router de express para ruteo
@@ -22,6 +23,12 @@ mainRouter.get('/productos-test', (req, res) => {
 			message: 'Algo salio mal al traer 5 items random',
 		});
 	}
+});
+
+mainRouter.post('/login', (req, res) => {
+	const data = req.body;
+	console.log(data);
+	res.status(200).json({ message: 'success' });
 });
 
 export default mainRouter;
