@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import http from 'http';
 import { Server } from 'socket.io';
 import { socketLogic } from './Utils/socketLogic.js';
@@ -30,6 +31,19 @@ io.on('connection', socketLogic);
 
 // APP ROUTING
 app.use('/api', mainRouter);
+
+// MONGO SETUP STANDARD
+try {
+	mongoose
+		.connect(process.env.CONNECTION_MONGODB_URL, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
+		.then(() => console.log('Connected to mongo'))
+		.catch((error) => console.log(error.message));
+} catch (e) {
+	console.error('Algo salio mal con mongo', e);
+}
 
 // SEVER STANDARD SETUP
 const localServer = app.listen(PORT, () => {
