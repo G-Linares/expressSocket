@@ -1,6 +1,10 @@
 import React, { ReactElement, useState } from "react";
+import { useGlobalContext } from "../Utils/globalContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm(): ReactElement {
+  const { setUser } = useGlobalContext();
+  const navigate = useNavigate();
   interface FormDataType {
     userName: string;
     password: string;
@@ -24,8 +28,9 @@ export default function LoginForm(): ReactElement {
     event.preventDefault();
     responseBody.userName = userName;
     responseBody.password = password;
-
-    console.log(responseBody);
+    // ya tenemos el request desde front
+    setUser(responseBody);
+    navigate("/home");
   };
 
   return (
