@@ -5,13 +5,17 @@ import Home from "./Views/Home";
 import Login from "./Views/Login";
 import Logout from "./Views/Logout";
 import NotFound from "./Views/NotFound";
-import { UserType } from "./Utils/loginTypes";
-import { MyGlobalContext } from "./Utils/globalContext";
+import { GlobalStateProvider } from "./Utils/globalContext";
+
+export interface UserType {
+  userName: string;
+  password: string;
+}
 
 function App() {
   const [user, setUser] = useState<UserType>();
   return (
-    <MyGlobalContext.Provider value={{ user, setUser }}>
+    <GlobalStateProvider>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -21,7 +25,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </MyGlobalContext.Provider>
+    </GlobalStateProvider>
   );
 }
 

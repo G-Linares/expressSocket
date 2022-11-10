@@ -1,8 +1,42 @@
-import { useContext, createContext } from "react";
-import { GlobalContexttype } from "./loginTypes";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  Dispatch,
+  SetStateAction
+} from "react";
 
-export const MyGlobalContext = createContext<GlobalContexttype>({
-  user: {},
-  setUser: () => {}
+export interface GlobalStateInterface {
+  userName: string;
+  password: string;
+}
+
+const GlobalStateContext = createContext({
+  user: {} as Partial<GlobalStateInterface>,
+  setUser: {} as Dispatch<SetStateAction<Partial<GlobalStateInterface>>>
 });
-export const useGlobalContext = () => useContext(MyGlobalContext);
+
+const GlobalStateProvider = ({
+  children,
+  value = {} as GlobalStateInterface
+}: {
+  children: React.ReactNode;
+  value?: Partial<GlobalStateInterface>;
+}) => {
+  const [user, setUser] = useState(value);
+  return (
+    <GlobalStateContext.Provider value={{ user, setUser }}>
+      {children}
+    </GlobalStateContext.Provider>
+  );
+};
+
+const useGlobalState = () => {
+  const context = useContext(GlobalStateContext);
+  if (!context) {
+    throw new Error("useGlobalState must be used within a GlobalStateContext");
+  }
+  return context;
+};
+
+export { GlobalStateProvider, useGlobalState };

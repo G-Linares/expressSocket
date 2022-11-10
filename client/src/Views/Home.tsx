@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Chat from "../Components/Chat";
 import ProductList from "../Components/ProductList";
-import { useGlobalContext } from "../Utils/globalContext";
+import { useGlobalState } from "../Utils/globalContext";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  const { user } = useGlobalContext();
+  const { user } = useGlobalState();
   useEffect(() => {
     console.log(user);
   }, []);
