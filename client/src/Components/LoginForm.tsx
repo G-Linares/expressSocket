@@ -1,9 +1,9 @@
 import React, { ReactElement, useState } from "react";
-import { useGlobalContext } from "../Utils/globalContext";
 import { useNavigate } from "react-router-dom";
+import { useGlobalState } from "../Utils/globalContext";
 
 export default function LoginForm(): ReactElement {
-  const { setUser } = useGlobalContext();
+  const { setUser } = useGlobalState();
   const navigate = useNavigate();
   interface FormDataType {
     userName: string;
