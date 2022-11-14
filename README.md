@@ -1,5 +1,7 @@
 # Como correr programa
 
+### Terminado
+
 - instalar ambas partes, client y server con npm install
 - correr docker-compose up situado en carpeta server
 - verificar que mongo este montado con docker ps
