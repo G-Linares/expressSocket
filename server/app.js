@@ -11,7 +11,7 @@ import mainRouter from './Routes/mainRoute.js';
 // import { sessionOptions } from './Utils/mongoStoreSession.js';
 
 import session from 'express-session';
-import MongoDBStore from 'connect-mongodb-session';
+import { sessionOptions } from './Utils/mongoStoreSession.js';
 
 // PORTS
 dotenv.config();
@@ -48,27 +48,7 @@ app.use(function (req, res, next) {
 	);
 	next();
 });
-
-const MongoStore = MongoDBStore(session);
-
-const sessionStore = new MongoStore({
-	uri: process.env.CONNECTION_MONGODB_URL,
-	collection: 'sessions',
-});
-
-app.use(
-	session({
-		secret: 'secret',
-		name: 'session-id', // cookies name to be put in "key" field in postman
-		store: sessionStore,
-		cookie: {
-			maxAge: 100000, // this is when our cookies will expired and the session will not be valid anymore (user will be log out)
-			secure: false, // to turn on just in production
-		},
-		resave: true,
-		saveUninitialized: false,
-	})
-);
+app.use(session(sessionOptions));
 
 // SOCKET IO STANDARD CONFIG --------
 const server = http.createServer(app);

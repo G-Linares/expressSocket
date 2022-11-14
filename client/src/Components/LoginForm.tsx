@@ -40,10 +40,9 @@ export default function LoginForm(): ReactElement {
           withCredentials: true
         }
       );
-      if (response.message === "success") {
+      if (response.status === "success") {
         navigate("/home");
         window.location.reload();
-        console.log("hola");
       } else {
         alert(" Contraseña o usuario incorrecto");
       }

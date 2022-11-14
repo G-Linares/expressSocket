@@ -27,19 +27,48 @@ mainRouter.get('/productos-test', (req, res) => {
 	}
 });
 
-mainRouter.get('/isAuth', async (req, res) => {
-	console.log(req.session);
-	// console.log(req.session.isAuth);
-	if (req.session.isAuth) {
-		return res.json(req.session.isAuth);
+mainRouter.get('/isAuth', (req, res) => {
+	if (req.session.userName) {
+		res.status(200).json({
+			userName: req.session.userName,
+		});
 	} else {
-		return res.status(401).json('unauthorize');
+		res.status(500).json({
+			status: 'error',
+			message: 'Algo salio mal al traer info de user',
+		});
 	}
 });
 
-mainRouter.post('/login', async (req, res) => {
-	req.session.isAuth = true;
-	res.status(200).json({ message: 'success', id: req.session.id });
+mainRouter.post('/login', (req, res) => {
+	const { userName, password } = req.body;
+	try {
+		req.session.userName = userName;
+		req.session.password = password;
+		res.status(200).json({
+			status: 'success',
+			message: 'Inicio de sesion correctamente',
+			id: req.session.id,
+		});
+	} catch (e) {
+		res
+			.status(500)
+			.json({ status: 'error', message: 'Algo salio mal al hacer login' });
+	}
+});
+
+mainRouter.post('/logout', async (req, res) => {
+	try {
+		await req.session.destroy();
+		res.status(200).json({
+			status: 'success',
+			message: 'Session cerrada',
+		});
+	} catch (e) {
+		res
+			.status(500)
+			.json({ status: 'error', message: 'Algo salio mal al hacer logout' });
+	}
 });
 
 export default mainRouter;
