@@ -1,6 +1,34 @@
 import React, { ReactElement } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar(): ReactElement {
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      const { data: response } = await axios.post(
+        "http://localhost:8080/api/logout",
+        {},
+        {
+          withCredentials: true
+        }
+      );
+      Swal.fire({
+        icon: "success",
+        title: "Bravo",
+        text: response.message
+      });
+      navigate("/");
+    } catch (e) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No puedes hacer logout si no has iniciado sesion"
+      });
+    }
+  };
+
   return (
     <nav className="p-3 bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
@@ -32,7 +60,10 @@ export default function Navbar(): ReactElement {
           </svg>
         </button>
         <div className="hiden w-full md:block md:w-auto" id="navbar-solid-bg">
-          <button className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3">
+          <button
+            onClick={handleLogout}
+            className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3"
+          >
             {" "}
             Logout{" "}
           </button>
