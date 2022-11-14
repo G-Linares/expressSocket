@@ -1,17 +1,26 @@
-import MongoStore from 'connect-mongo';
-import dotenv from 'dotenv';
+// import MongoStore from 'connect-mongo';
+// import { default as connectMongoDBSession} from 'connect-mongodb-session';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
-const sessionStore = MongoStore.create({
-	mongoUrl: process.env.CONNECTION_MONGODB_URL,
-	ttl: 60000,
-});
+// // const sessionStore = MongoStore.create({
+// // 	uri: process.env.CONNECTION_MONGODB_URL,
+// // 	collection:"sessions"
+// // });
 
-export const sessionOptions = {
-	secret: process.env.CONNECTION_MONGODB_SECRET,
-	cookie: { maxAge: 60000, httpOnly: true, signed: true },
-	saveUninitialized: true,
-	resave: false,
-	store: sessionStore,
-};
+// const MongoDBStore = connectMongoDBSession(sessionStore);
+
+// export const sessionOptions = {
+// 	secret: process.env.CONNECTION_MONGODB_SECRET,
+// 	resave: false,
+// 	saveUninitialized: true,
+// 	cookie: {
+// 		path: '/home',
+// 		maxAge: 60000,
+// 		httpOnly: true,
+// 		signed: true,
+// 		isAuth: false,
+// 	},
+// 	store: sessionStore,
+// };

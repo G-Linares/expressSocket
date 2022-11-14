@@ -1,9 +1,6 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 
-interface Props {}
-
-export default function Navbar({}: Props): ReactElement {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+export default function Navbar(): ReactElement {
   return (
     <nav className="p-3 bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
@@ -35,12 +32,10 @@ export default function Navbar({}: Props): ReactElement {
           </svg>
         </button>
         <div className="hiden w-full md:block md:w-auto" id="navbar-solid-bg">
-          {isLoggedIn ? (
-            <button className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3">
-              {" "}
-              Logout{" "}
-            </button>
-          ) : null}
+          <button className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3">
+            {" "}
+            Logout{" "}
+          </button>
         </div>
       </div>
     </nav>

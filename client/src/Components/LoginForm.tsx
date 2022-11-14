@@ -35,11 +35,15 @@ export default function LoginForm(): ReactElement {
     try {
       const { data: response } = await axios.post(
         `${process.env.REACT_APP_LOGIN_URL}`,
-        responseBody
+        responseBody,
+        {
+          withCredentials: true
+        }
       );
       if (response.message === "success") {
         navigate("/home");
         window.location.reload();
+        console.log("hola");
       } else {
         alert(" Contraseña o usuario incorrecto");
       }
