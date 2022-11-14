@@ -5,13 +5,16 @@ import mongoose from 'mongoose';
 import http from 'http';
 import { Server } from 'socket.io';
 import cookieParser from 'cookie-parser';
-import { socketLogic } from './Utils/socketLogic.js';
+import session from 'express-session';
 
 import mainRouter from './Routes/mainRoute.js';
-// import { sessionOptions } from './Utils/mongoStoreSession.js';
-
-import session from 'express-session';
 import { sessionOptions } from './Utils/mongoStoreSession.js';
+import { socketLogic } from './Utils/socketLogic.js';
+import {
+	corsConfig,
+	headerConfig,
+	socketCorsConfig,
+} from './Utils/corsConfig.js';
 
 // PORTS
 dotenv.config();
@@ -21,13 +24,7 @@ const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
 // APP STANDARD CONFIG
 const app = express();
 
-app.use(
-	cors({
-		origin: 'http://localhost:3000',
-		methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
-		credentials: true,
-	})
-);
+app.use(cors(corsConfig));
 app.use(cookieParser());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
@@ -35,29 +32,12 @@ app.use(express.json());
 
 // MONGO SESSION CONFIG --------
 
-app.use(function (req, res, next) {
-	res.header('Access-Control-Allow-Credentials', true);
-	res.header('Access-Control-Allow-Origin', req.headers.origin);
-	res.header(
-		'Access-Control-Allow-Methods',
-		'GET,PUT,POST,DELETE,UPDATE,OPTIONS'
-	);
-	res.header(
-		'Access-Control-Allow-Headers',
-		'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
-	);
-	next();
-});
+app.use(headerConfig);
 app.use(session(sessionOptions));
 
 // SOCKET IO STANDARD CONFIG --------
 const server = http.createServer(app);
-const io = new Server(server, {
-	cors: {
-		origin: 'http://localhost:3000',
-		methods: ['GET', 'POST'],
-	},
-});
+const io = new Server(server, socketCorsConfig);
 io.on('connection', socketLogic);
 
 // APP ROUTING -------------------------------
