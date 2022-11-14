@@ -57,9 +57,10 @@ mainRouter.post('/login', (req, res) => {
 	}
 });
 
-mainRouter.post('/logout', async (req, res) => {
+mainRouter.get('/logout', (req, res) => {
 	try {
-		await req.session.destroy();
+		req.session.destroy();
+		res.clearCookie('session-id');
 		res.status(200).json({
 			status: 'success',
 			message: 'Session cerrada',

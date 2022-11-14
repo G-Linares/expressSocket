@@ -7,9 +7,8 @@ export default function Navbar(): ReactElement {
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
-      const { data: response } = await axios.post(
+      const { data: response } = await axios.get(
         "http://localhost:8080/api/logout",
-        {},
         {
           withCredentials: true
         }
