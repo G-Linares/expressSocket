@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "socket.io-client";
-import { messageType } from "../Utils/chatTypes";
+import { messageType } from "../Utils/appTypes";
 import { ClipLoader } from "react-spinners";
 
 // siempre va a ser hardcoded el 3001

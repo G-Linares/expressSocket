@@ -1,8 +1,8 @@
 import React from "react";
-import useGetItems from "../Utils/useGetItems";
 import ItemList from "./ItemList";
-import { TApiResponse } from "../Utils/useGetItems";
+import { TApiResponse } from "../Utils/appTypes";
 import { ClipLoader } from "react-spinners";
+import useFetchData from "../Utils/useFetchData";
 
 export interface ItemTypes {
   id: string;
@@ -12,7 +12,7 @@ export interface ItemTypes {
 }
 
 export default function ProductList() {
-  const { allItems, isLoading }: TApiResponse = useGetItems(
+  const { data, isLoading }: TApiResponse = useFetchData(
     "http://localhost:8080/api/productos-test"
   );
 
@@ -52,7 +52,7 @@ export default function ProductList() {
                     </tr>
                   ) : (
                     <>
-                      {allItems.map((item: ItemTypes) => {
+                      {data.map((item: ItemTypes) => {
                         return (
                           <ItemList
                             key={item.id}

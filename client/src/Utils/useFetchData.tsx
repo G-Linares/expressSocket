@@ -1,20 +1,17 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { TApiResponse } from "./appTypes";
 
-export type TApiResponse = {
-  allItems: any;
-  isLoading: Boolean;
-};
-
-export default function useGetItems(urlToBeFetched: string) {
-  const [allItems, setAllItems] = useState<Array<object>>([]);
+export default function useFetchData(urlToBeFetched: string) {
+  const [data, setData] = useState<TApiResponse>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchRandomItems = async () => {
       setIsLoading(true);
       try {
         const { data: response } = await axios.get(urlToBeFetched);
-        setAllItems(response);
+        console.log(response);
+        setData(response);
       } catch (e) {
         console.error(e);
       }
@@ -22,5 +19,5 @@ export default function useGetItems(urlToBeFetched: string) {
     };
     fetchRandomItems();
   }, [urlToBeFetched]);
-  return { allItems, isLoading };
+  return { data, isLoading };
 }
