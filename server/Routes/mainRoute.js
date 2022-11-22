@@ -1,12 +1,14 @@
 import express from 'express';
 
 import { ContenedorProductos } from '../Class/ContenedorProductos.js';
+import { ContenedorUsers } from '../DAOs/ContenedorUsers.js';
 
 // inicializo router de express para ruteo
 const mainRouter = express.Router();
 
-// inicializo contenedor de Productos
+// inicializo contenedor de Productos y Users
 const contenedorProductos = new ContenedorProductos();
+const contenedorUsers = new ContenedorUsers();
 
 // jala toda la informacion de todos los items
 mainRouter.get('/ping', (req, res) => {
@@ -42,9 +44,11 @@ mainRouter.get('/isAuth', (req, res) => {
 
 mainRouter.post('/login', (req, res) => {
 	const { userName, password } = req.body;
+
 	try {
 		req.session.userName = userName;
 		req.session.password = password;
+
 		res.status(200).json({
 			status: 'success',
 			message: 'Inicio de sesion correctamente',
@@ -69,6 +73,23 @@ mainRouter.get('/logout', (req, res) => {
 		res
 			.status(500)
 			.json({ status: 'error', message: 'Algo salio mal al hacer logout' });
+	}
+});
+
+mainRouter.post('/signin', async (req, res) => {
+	const { userName, password } = req.body;
+	try {
+		await contenedorUsers.saveOneUser({ userName, password });
+		res.status(200).json({
+			status: 'success',
+			message: 'Inicio de sesion correctamente',
+			id: userName,
+		});
+	} catch (e) {
+		res.status(500).json({
+			status: 'error',
+			message: 'Algo salio mal al registrar usuario',
+		});
 	}
 });
 
