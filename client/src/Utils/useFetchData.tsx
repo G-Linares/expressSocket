@@ -10,7 +10,6 @@ export default function useFetchData(urlToBeFetched: string) {
       setIsLoading(true);
       try {
         const { data: response } = await axios.get(urlToBeFetched);
-        console.log(response);
         setData(response);
       } catch (e) {
         console.error(e);

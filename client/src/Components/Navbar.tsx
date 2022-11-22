@@ -1,14 +1,16 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export default function Navbar(): ReactElement {
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const { data: response } = await axios.get(
-        "http://localhost:8080/api/logout",
+        `${process.env.REACT_APP_LOGOUT_URL}`,
         {
           withCredentials: true
         }
@@ -18,6 +20,7 @@ export default function Navbar(): ReactElement {
         title: "Bravo",
         text: response.message
       });
+      setIsLogged(false);
       navigate("/");
     } catch (e) {
       Swal.fire({
@@ -27,6 +30,11 @@ export default function Navbar(): ReactElement {
       });
     }
   };
+
+  useEffect(() => {
+    const myCookie = Cookies.get("session-id");
+    if (myCookie !== undefined) setIsLogged(true);
+  }, []);
 
   return (
     <nav className="p-3 bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -58,15 +66,17 @@ export default function Navbar(): ReactElement {
             ></path>
           </svg>
         </button>
-        <div className="hiden w-full md:block md:w-auto" id="navbar-solid-bg">
-          <button
-            onClick={handleLogout}
-            className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3"
-          >
-            {" "}
-            Logout{" "}
-          </button>
-        </div>
+        {isLogged ? (
+          <div className="hiden w-full md:block md:w-auto" id="navbar-solid-bg">
+            <button
+              onClick={handleLogout}
+              className="flex flex-col mt-4 bg-blue-500 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 p-3"
+            >
+              {" "}
+              Logout{" "}
+            </button>
+          </div>
+        ) : null}
       </div>
     </nav>
   );

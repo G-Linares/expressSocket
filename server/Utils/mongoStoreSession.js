@@ -18,6 +18,7 @@ export const sessionOptions = {
 	cookie: {
 		maxAge: 1000 * 60 * 60,
 		secure: false,
+		httpOnly: false,
 	},
 	resave: true,
 	saveUninitialized: false,

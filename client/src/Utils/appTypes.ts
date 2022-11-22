@@ -17,6 +17,11 @@ export interface FormDataType {
     password: string;
 }
 
+export interface FormProps {
+  title: string;
+  isLogin:boolean;
+}
+
 export type TApiResponse = {
   data: any;
   isLoading: Boolean;

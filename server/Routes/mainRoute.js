@@ -82,8 +82,7 @@ mainRouter.post('/signin', async (req, res) => {
 		await contenedorUsers.saveOneUser({ userName, password });
 		res.status(200).json({
 			status: 'success',
-			message: 'Inicio de sesion correctamente',
-			id: userName,
+			message: 'Usuario registrado correctamente',
 		});
 	} catch (e) {
 		res.status(500).json({
